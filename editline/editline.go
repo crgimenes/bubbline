@@ -17,7 +17,6 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	rw "github.com/mattn/go-runewidth"
 	"github.com/muesli/reflow/wordwrap"
 	"github.com/vito/bubbline/complete"
 	"github.com/vito/bubbline/editline/internal/textarea"
@@ -530,7 +529,7 @@ func (m *Model) updatePrompt() {
 	if m.promptHidden {
 		prompt, nextPrompt = "", ""
 	}
-	promptWidth := max(rw.StringWidth(prompt), rw.StringWidth(nextPrompt))
+	promptWidth := max(lipgloss.Width(prompt), lipgloss.Width(nextPrompt))
 	m.text.Prompt = ""
 	m.text.SetPromptFunc(promptWidth, func(line int) string {
 		if line == 0 {
@@ -539,7 +538,7 @@ func (m *Model) updatePrompt() {
 		return nextPrompt
 	})
 	// Recompute the width.
-	m.text.SetWidth(m.maxWidth - 1)
+	m.text.SetWidth(m.maxWidth)
 }
 
 func (m *Model) saveValue() {
@@ -664,7 +663,7 @@ func (m *Model) SetSize(width, height int) {
 func (m *Model) updateSize() tea.Cmd {
 	m.maxWidth = m.newWidth
 	m.maxHeight = m.newHeight
-	m.setWidth(m.newWidth - 1)
+	m.setWidth(m.newWidth)
 	m.hasNewSize = false
 	return m.updateTextSz()
 }
@@ -672,17 +671,17 @@ func (m *Model) updateSize() tea.Cmd {
 // setWidth changes the width of the editor.
 func (m *Model) setWidth(w int) {
 	w = clamp(w, 1, m.maxWidth)
-	m.text.SetWidth(w - 1)
-	m.completions.SetWidth(w - 1)
-	m.hctrl.pattern.Width = w - 1
-	m.help.Width = w - 1
+	m.text.SetWidth(w)
+	m.completions.SetWidth(w)
+	m.hctrl.pattern.Width = w
+	m.help.Width = w
 }
 
 // DefaultReflow is the default/initial value of Reflow.
 func DefaultReflow(
 	allText bool, currentText string, targetWidth int,
 ) (changed bool, newText, info string) {
-	if rw.StringWidth(currentText) <= targetWidth {
+	if lipgloss.Width(currentText) <= targetWidth {
 		return false, currentText, ""
 	}
 	return true, wordwrap.String(currentText, targetWidth), ""
