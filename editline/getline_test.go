@@ -12,10 +12,10 @@ import (
 	"github.com/charmbracelet/bubbles/cursor"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/cockroachdb/datadriven"
-	"github.com/knz/bubbline"
-	"github.com/knz/bubbline/computil"
-	"github.com/knz/bubbline/editline"
 	"github.com/knz/catwalk"
+	"github.com/vito/bubbline"
+	"github.com/vito/bubbline/computil"
+	"github.com/vito/bubbline/editline"
 )
 
 // TestBubbline tests the bubbline widget and the Editor API.

@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/knz/bubbline/computil"
-	"github.com/knz/bubbline/editline"
+	"github.com/vito/bubbline/computil"
+	"github.com/vito/bubbline/editline"
 )
 
 func main() {

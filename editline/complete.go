@@ -3,9 +3,9 @@ package editline
 import (
 	"sort"
 
-	"github.com/knz/bubbline/complete"
-	"github.com/knz/bubbline/computil"
 	rw "github.com/mattn/go-runewidth"
+	"github.com/vito/bubbline/complete"
+	"github.com/vito/bubbline/computil"
 )
 
 // AutoCompleteFn is called upon the user pressing the

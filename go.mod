@@ -1,4 +1,4 @@
-module github.com/knz/bubbline
+module github.com/vito/bubbline
 
 go 1.13
 
