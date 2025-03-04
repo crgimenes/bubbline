@@ -1,6 +1,6 @@
 module github.com/vito/bubbline
 
-go 1.24
+go 1.23
 
 require (
 	github.com/atotto/clipboard v0.1.4
