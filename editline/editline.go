@@ -340,6 +340,16 @@ func (m *Model) Value() string {
 	return m.text.Value()
 }
 
+// AtStart returns true if the cursor is at the start of the input.
+func (m *Model) AtStart() bool {
+	return m.text.Line() == 0 && m.text.CursorPos() == 0
+}
+
+// AtEnd returns true if the cursor is at the end of the input.
+func (m *Model) AtEnd() bool {
+	return m.text.Line() == m.text.LineCount()-1 && m.text.CursorPos() == len(m.text.Value())
+}
+
 // Focus sets the focus state on the model. When the model is in focus
 // it can receive keyboard input and the cursor is displayed.
 func (m *Model) Focus() tea.Cmd {
