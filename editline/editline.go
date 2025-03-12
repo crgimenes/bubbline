@@ -104,6 +104,8 @@ type Model struct {
 
 	// KeyMap is the key bindings to use.
 	KeyMap KeyMap
+	// HideKeyMap if true hides the key map.
+	HideKeyMap bool
 
 	// Styling. FocusedStyle and BlurredStyle are used to style the textarea in
 	// focused and blurred states.
@@ -1103,7 +1105,7 @@ func (m Model) View() string {
 	if m.currentlySearching() {
 		buf.WriteByte('\n')
 		buf.WriteString(m.hctrl.pattern.View())
-	} else {
+	} else if !m.HideKeyMap {
 		buf.WriteByte('\n')
 		buf.WriteString(m.help.View(m))
 	}
