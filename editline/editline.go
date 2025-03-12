@@ -192,6 +192,9 @@ type Model struct {
 	// Only takes effect at Reset() or Focus().
 	ShowLineNumbers bool
 
+	// HistoryEncoder is the encoder to use for history entries.
+	HistoryEncoder HistoryEncoder
+
 	// externalEditorExt is the extension to use when creating a temporary file for
 	// an external editor.
 	externalEditorExt string
@@ -229,6 +232,13 @@ type Model struct {
 	// Delayed resize.
 	hasNewSize          bool
 	newWidth, newHeight int
+}
+
+type HistoryEncoder interface {
+	EncodeHistory(entry string) string
+	DecodeHistory(entry string) string
+	SaveBeforeHistory()
+	RestoreAfterHistory()
 }
 
 // New creates a new Model.
@@ -303,6 +313,7 @@ func (m *Model) GetHistory() []string {
 
 // AddHistoryEntry adds an entry to the history navigation list.
 func (m *Model) AddHistoryEntry(s string) {
+	s = m.encodeHistory(s)
 	// Only add a new entry if it doesn't duplicate the last one.
 	if len(m.history) == 0 || !(m.DedupHistory && s == m.history[len(m.history)-1]) {
 		m.history = append(m.history, s)
@@ -400,6 +411,9 @@ func (m *Model) cancelHistorySearch() (cmd tea.Cmd) {
 }
 
 func (m *Model) restoreValue() (cmd tea.Cmd) {
+	if m.HistoryEncoder != nil {
+		m.HistoryEncoder.RestoreAfterHistory()
+	}
 	cmd = m.updateValue(m.hctrl.c.prevValue, m.hctrl.c.prevCursor)
 	m.hctrl.c.valueSaved = false
 	m.hctrl.c.prevValue = ""
@@ -437,7 +451,7 @@ func (m *Model) incrementalSearch(nextMatch bool) (cmd tea.Cmd) {
 
 	i := m.hctrl.c.cursor - 1
 	for ; i >= 0; i-- {
-		entry := m.history[i]
+		entry := m.decodeHistory(m.history[i])
 		lentry := entry
 		if !m.CaseSensitiveSearch {
 			lentry = strings.ToLower(lentry)
@@ -538,9 +552,26 @@ func (m *Model) updatePrompt() {
 }
 
 func (m *Model) saveValue() {
+	if m.HistoryEncoder != nil {
+		m.HistoryEncoder.SaveBeforeHistory()
+	}
 	m.hctrl.c.valueSaved = true
 	m.hctrl.c.prevValue = m.text.Value()
 	m.hctrl.c.prevCursor = m.text.CursorPos()
+}
+
+func (m *Model) decodeHistory(entry string) string {
+	if m.HistoryEncoder != nil {
+		return m.HistoryEncoder.DecodeHistory(entry)
+	}
+	return entry
+}
+
+func (m *Model) encodeHistory(entry string) string {
+	if m.HistoryEncoder != nil {
+		return m.HistoryEncoder.EncodeHistory(entry)
+	}
+	return entry
 }
 
 func (m *Model) historyUp() (cmd tea.Cmd) {
@@ -551,7 +582,7 @@ func (m *Model) historyUp() (cmd tea.Cmd) {
 		m.saveValue()
 	}
 	m.hctrl.c.cursor--
-	entry := m.history[m.hctrl.c.cursor]
+	entry := m.decodeHistory(m.history[m.hctrl.c.cursor])
 	return tea.Batch(cmd, m.updateValue(entry, len(entry)))
 }
 
@@ -566,7 +597,7 @@ func (m *Model) historyDown() (cmd tea.Cmd) {
 	if m.hctrl.c.cursor >= len(m.history) {
 		return m.restoreValue()
 	}
-	entry := m.history[m.hctrl.c.cursor]
+	entry := m.decodeHistory(m.history[m.hctrl.c.cursor])
 	return tea.Batch(cmd, m.updateValue(entry, len(entry)))
 }
 
