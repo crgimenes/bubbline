@@ -350,7 +350,7 @@ func (m *Model) Focus() tea.Cmd {
 	m.text.ShowLineNumbers = m.ShowLineNumbers
 	m.text.FocusedStyle = m.FocusedStyle.Editor
 	m.text.BlurredStyle = m.BlurredStyle.Editor
-	m.updatePrompt()
+	m.UpdatePrompt()
 	m.hctrl.pattern.PromptStyle = m.FocusedStyle.SearchInput.PromptStyle
 	m.hctrl.pattern.TextStyle = m.FocusedStyle.SearchInput.TextStyle
 	m.hctrl.pattern.PlaceholderStyle = m.FocusedStyle.SearchInput.PlaceholderStyle
@@ -534,7 +534,7 @@ func (m *Model) hidePrompt(b bool) {
 	}
 }
 
-func (m *Model) updatePrompt() {
+func (m *Model) UpdatePrompt() {
 	prompt, nextPrompt := m.Prompt, m.NextPrompt
 	if m.promptHidden {
 		prompt, nextPrompt = "", ""
@@ -899,7 +899,7 @@ func (m *Model) Update(imsg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case key.Matches(msg, m.KeyMap.HideShowPrompt):
 			m.hidePrompt(!m.promptHidden)
-			m.updatePrompt()
+			m.UpdatePrompt()
 			return m, tea.Batch(cmd, m.updateTextSz())
 
 		default:
