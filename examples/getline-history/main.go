@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/vito/bubbline"
+	"github.com/crgimenes/bubbline"
 )
 
 func main() {

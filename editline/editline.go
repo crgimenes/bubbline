@@ -16,9 +16,9 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/crgimenes/bubbline/complete"
+	"github.com/crgimenes/bubbline/editline/internal/textarea"
 	"github.com/muesli/reflow/wordwrap"
-	"github.com/vito/bubbline/complete"
-	"github.com/vito/bubbline/editline/internal/textarea"
 )
 
 // ErrInterrupted is returned when the input is terminated
