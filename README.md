@@ -1,3 +1,5 @@
+**attention** This is a heavily modified version of the bubbline module, please use the original module at https://github.com/knz/bubbline or the vito's fork at https://github.com/vito/bubbline.git
+
 # Bubbline
 
 [![GoDoc](https://godoc.org/github.com/golang/gddo?status.svg)](https://pkg.go.dev/github.com/knz/bubbline)
